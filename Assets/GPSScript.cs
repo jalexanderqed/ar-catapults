@@ -6,6 +6,7 @@ public class GPSScript : MonoBehaviour {
 	public GameObject text;
 	private TextMesh txt;
 	private bool locEnabled = true;
+	private Compass compass;
 
 	IEnumerator Wait(int secs){
 		yield return new WaitForSeconds(secs);
@@ -19,7 +20,8 @@ public class GPSScript : MonoBehaviour {
 		} else {
 			Input.location.Start (5f,1f);
 		}
-
+		compass = new Compass ();
+		compass.enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -32,7 +34,8 @@ public class GPSScript : MonoBehaviour {
 				txt.text = "Unable to determine device location";
 				return;
 			} else {
-				txt.text = "Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp;
+				txt.text = "Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp
+					+ "\nCompass: " + compass.trueHeading;
 			}
 		}
 	}
