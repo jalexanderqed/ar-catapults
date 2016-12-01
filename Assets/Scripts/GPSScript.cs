@@ -12,10 +12,7 @@ public class GPSScript : MonoBehaviour {
 	public float latitude;
 	public float heading;
 	public bool ready = false;
-
-	IEnumerator Wait(int secs){
-		yield return new WaitForSeconds(secs);
-	}
+	public Vector3 offset;
 
 	void Start () {
 		txt = text.GetComponent<TextMesh>();
@@ -39,7 +36,7 @@ public class GPSScript : MonoBehaviour {
 				return;
 			} else if (Input.location.status == LocationServiceStatus.Running) {
 				txt.text = "Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp
-					+ "\nCompass: " + compass.trueHeading;
+					+ "\nCompass: " + compass.trueHeading + "\n Unity Offset: " + offset.x + "," + offset.z;
 				latitude = Input.location.lastData.latitude;
 				longitude = Input.location.lastData.longitude;
 				heading = compass.trueHeading;
@@ -62,5 +59,13 @@ public class GPSScript : MonoBehaviour {
 
 	public bool getReady(){
 		return ready;
+	}
+
+	public void setOffset(Vector3 off){
+		offset = off;
+	}
+
+	public Vector3 getOffset(){
+		return offset;
 	}
 }

@@ -4,17 +4,17 @@ using UnityEngine.Networking;
 
 public class ServerScript : NetworkBehaviour {
 
-	[SyncVar]
-	int playerNum;
+	[SyncVar(hook = "OnChangePlayerNum")]
+	public int playerNum;
 
-	[SyncVar]
-	float longitude;
+	[SyncVar(hook = "OnChangeLongitude")]
+	public float longitude;
 
-	[SyncVar]
-	float latitude;
+	[SyncVar(hook = "OnChangeLatitude")]
+	public float latitude;
 
-	[SyncVar]
-	bool choseLocation;
+	[SyncVar(hook = "OnChooseLocation")]
+	public bool choseLocation;
 
 	private GPSScript gps;
 
@@ -27,15 +27,15 @@ public class ServerScript : NetworkBehaviour {
 			return new Vector3 (0,-1,0); //not ready yet
 		return new Vector3(longitude - longi,0,latitude - latit);
 	}
-
-	[Command]
-	public void CmdSetLoc(float longi, float latit){
+		
+	public void setLoc(float longi, float latit){
 		if (!isServer)
 			return;
 		if (!choseLocation) {
 			longitude = longi;
 			latitude = latit;
 			choseLocation = true;
+			Debug.Log ("Chose location!");
 		}
 	}
 
@@ -52,6 +52,22 @@ public class ServerScript : NetworkBehaviour {
 				choseLocation = true;
 			}
 		}
+	}
+
+	void OnChangePlayerNum(int num){
+		playerNum = num;
+	}
+
+	void OnChangeLongitude(float longit){
+		longitude = longit;
+	}
+
+	void OnChangeLatitude(float latit){
+		latitude = latit;
+	}
+
+	void OnChooseLocation(bool chose){
+		choseLocation = chose;
 	}
 
 }
