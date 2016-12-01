@@ -18,6 +18,7 @@ public class ServerScript : NetworkBehaviour {
 
 	private GPSScript gps;
 
+	public int testing;
 
 	public float toRadians(float degs){
 		return ((Mathf.PI / 180f) * degs);
@@ -30,7 +31,8 @@ public class ServerScript : NetworkBehaviour {
 		float dLong = longi - longitude;
 		float dLati = latit - latitude;
 
-		return new Vector3 (0, 0, -10);
+		return new Vector3 (0, 0,testing * -5);
+		testing++;
 
 		//return new Vector3 (dLong * 111111f * Mathf.Cos(latitude),0f,dLati * 111111f);
 

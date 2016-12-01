@@ -19,7 +19,10 @@ public class FollowCube : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (!isLocalPlayer) return;
+		if (!isLocalPlayer) {
+			Destroy (myCamObj);
+			return;
+		}
         camera = GameObject.Find("SceneCamera");
 		myCam = myCamObj.GetComponent<Camera> ();
 		camera.GetComponent<Camera> ().enabled = false;
@@ -68,6 +71,8 @@ public class FollowCube : NetworkBehaviour {
 	}
 
 	void OnGetOffset(Vector3 off){
+		if (!isLocalPlayer)
+			return;
 		offset = off;
 		gps.setOffset (off);
 	}
