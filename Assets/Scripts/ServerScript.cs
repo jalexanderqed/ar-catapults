@@ -19,13 +19,32 @@ public class ServerScript : NetworkBehaviour {
 	private GPSScript gps;
 
 
+	public float toRadians(float degs){
+		return ((Mathf.PI / 180f) * degs);
+	}
+
 	//[Command]
 	public Vector3 Offset(float longi,float latit){
-		//if (!isServer)
-			//return new Vector3 (0, -2, 0);
 		if (!choseLocation)
 			return new Vector3 (0,-1,0); //not ready yet
-		return new Vector3(longitude - longi,0,latitude - latit);
+		float dLong = longi - longitude;
+		float dLati = latit - latitude;
+
+		return new Vector3 (0, 0, -5);
+
+		return new Vector3 (dLong * 111111f * Mathf.Cos(latitude),0f,dLati * 111111f);
+
+		/*float rDLong = toRadians (dLong);
+		float rDLati = toRadians (dLati);
+
+		float rLatit = toRadians (latit);
+		float rLatitude = toRadians (latitude);
+
+		float a = Mathf.Pow(Mathf.Sin(rDLati/2f),2) + Mathf.Pow(Mathf.Sin(rDLong/2f)) * Mathf.Cos(rLatitude) * Mathf.Cos(rLatit); 
+		float c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1-a)); 
+		float dist = c * 6371 * 1000;
+		//Should be a vector in meters
+		return  new Vector3(dLati,0,dLong).normalized * dist;*/
 	}
 		
 	public void setLoc(float longi, float latit){
