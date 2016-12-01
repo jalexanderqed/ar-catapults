@@ -4,8 +4,10 @@ using UnityEngine.Networking;
 
 public class FollowCube : NetworkBehaviour {
 
-    GameObject camera;
+	public GameObject myCamObj;
+	private Camera myCam;
 
+	private GameObject camera;
 	private GameObject serverObj;
 	private GPSScript gps;
 	//private ServerScript server;
@@ -19,11 +21,14 @@ public class FollowCube : NetworkBehaviour {
 	void Start () {
         if (!isLocalPlayer) return;
         camera = GameObject.Find("SceneCamera");
+		myCam = myCamObj.GetComponent<Camera> ();
+		camera.GetComponent<Camera> ().enabled = false;
+		myCam.enabled = true;
 		gps = GetComponent<GPSScript> ();
-        this.transform.parent = camera.transform;
-        this.transform.localPosition = new Vector3(0, 0, 0);
-        this.transform.localRotation = Quaternion.identity;
-        this.transform.localScale = new Vector3(1, 1, 1);
+        //this.transform.parent = camera.transform;
+        //this.transform.localPosition = new Vector3(0, 0, 0);
+        //this.transform.localRotation = Quaternion.identity;
+        //this.transform.localScale = new Vector3(1, 1, 1);
 	}
 	
 	// Update is called once per frame
@@ -43,6 +48,14 @@ public class FollowCube : NetworkBehaviour {
 			} else {
 				located = 2;
 			}
+		}
+	}
+
+	void LateUpdate(){
+		if (!isLocalPlayer) return;
+		if (camera != null) {
+			transform.position = camera.transform.position + gps.getOffset ();
+			transform.rotation = camera.transform.rotation;
 		}
 	}
 
