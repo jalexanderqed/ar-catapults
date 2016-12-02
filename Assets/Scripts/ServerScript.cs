@@ -25,14 +25,17 @@ public class ServerScript : NetworkBehaviour {
 	}
 
 	//[Command]
-	public Vector3 Offset(float longi,float latit){
+	public Vector3 Offset(float longi,float latit,bool offsetProvided){
 		if (!choseLocation)
 			return new Vector3 (0,-1,0); //not ready yet
 		float dLong = longi - longitude;
 		float dLati = latit - latitude;
 
-
-		return new Vector3 (dLati * 111111f,0f,dLong * 111111f * Mathf.Cos(latitude));
+		if (offsetProvided) {
+			return new Vector3 (latit,0,longi);
+		} else {
+			return new Vector3 (dLati * 111111f, 0f, dLong * 111111f * Mathf.Cos (latitude));
+		}
 
 		/*float rDLong = toRadians (dLong);
 		float rDLati = toRadians (dLati);

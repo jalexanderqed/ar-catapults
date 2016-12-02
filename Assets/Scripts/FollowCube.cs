@@ -46,17 +46,23 @@ public class FollowCube : NetworkBehaviour {
 	void Update () {
 		if (!isLocalPlayer) return;
 		if (located < 2) {
+			float lon = gps.getLongitude ();
+			float lat = gps.getLatitude ();
+			if (OffsetProvided) {
+				lon = offset.z;
+				lat = offset.x;
+			}
 			//Make sure server knows where it is and attempt to localize
 			if (located == 0) {
 				if (gps.getReady ()) {
-					CmdLocate (gps.getLongitude (),gps.getLatitude (),true,OffsetProvided);
+					CmdLocate (lon,lat,true,OffsetProvided);
 					located = 1;
 				}
 			} 
 			//If not still localized, keep trying
 			if (located == 1) {
 				if (gps.getOffset().y == -1) {
-					CmdLocate (gps.getLongitude (),gps.getLatitude (),false,OffsetProvided);
+					CmdLocate (lon,lat,false,OffsetProvided);
 				} else {
 					located = 2;
 				}
@@ -77,7 +83,7 @@ public class FollowCube : NetworkBehaviour {
 		GameObject serverObj = GameObject.Find ("ServerObj");
 		ServerScript server = serverObj.GetComponent<ServerScript> ();
 		if(provideLoc) server.setLoc (longit, latit);
-		if (!offProv) offset = server.Offset (longit, latit);
+		offset = server.Offset (longit, latit);
 	}
 
 	void OnGetOffset(Vector3 off){
