@@ -14,5 +14,6 @@ public class PillGuyMovement : MonoBehaviour {
 	void Update () {
         this.transform.position = new Vector3(myTablet.transform.position.x, 2, myTablet.transform.position.z);
         this.transform.rotation = Quaternion.Euler(0, myTablet.transform.eulerAngles.y, 0);
+        this.transform.localPosition = new Vector3(0, 0, -0.5f);
 	}
 }
