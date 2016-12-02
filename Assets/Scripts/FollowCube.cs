@@ -83,7 +83,7 @@ public class FollowCube : NetworkBehaviour {
 		GameObject serverObj = GameObject.Find ("ServerObj");
 		ServerScript server = serverObj.GetComponent<ServerScript> ();
 		if(provideLoc) server.setLoc (longit, latit);
-		offset = server.Offset (longit, latit);
+		offset = server.Offset (longit, latit,offProv);
 	}
 
 	void OnGetOffset(Vector3 off){
