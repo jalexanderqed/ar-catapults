@@ -40,10 +40,10 @@ public class DebugColor : MonoBehaviour, ITrackableEventHandler
         switch (status)
         {
             case TrackableBehaviour.Status.DETECTED:
-                ret = purple;
+                ret = red;
                 break;
             case TrackableBehaviour.Status.EXTENDED_TRACKED:
-                ret = red;
+                ret = purple;
                 break;
             case TrackableBehaviour.Status.TRACKED:
                 ret = white;
