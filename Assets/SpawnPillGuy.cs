@@ -4,10 +4,11 @@ using System.Collections;
 public class SpawnPillGuy : MonoBehaviour {
 
     public GameObject pillGuyObject;
+    GameObject pillGuy;
 
-	// Use this for initialization
-	void Start () {
-        GameObject pillGuy = Instantiate(pillGuyObject);
+    // Use this for initialization
+    void Start () {
+        pillGuy = Instantiate(pillGuyObject);
         pillGuy.GetComponent<PillGuyMovement>().myTablet = this.transform.gameObject;
 	}
 	
@@ -15,4 +16,9 @@ public class SpawnPillGuy : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void OnDestroy()
+    {
+        Destroy(pillGuy);
+    }
 }
