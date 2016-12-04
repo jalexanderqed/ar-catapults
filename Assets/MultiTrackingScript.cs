@@ -4,21 +4,16 @@ using Vuforia;
 
 public class MultiTrackingScript : MonoBehaviour, ITrackableEventHandler
 {
-    private GameObject stones;
-    private GameObject chips;
-    private TrackableBehaviour stoneTrack;
-    private TrackableBehaviour chipsTrack;
+    public GameObject[] targets;
+    private TrackableBehaviour[] targetsTracking;
 
     // Use this for initialization
     void Start () {
-	    stones = GameObject.Find("stones_target");
-        chips = GameObject.Find("chips_target");
-
-        stoneTrack = stones.GetComponent<TrackableBehaviour>();
-        chipsTrack = chips.GetComponent<TrackableBehaviour>();
-
-        stoneTrack.RegisterTrackableEventHandler(this);
-        chipsTrack.RegisterTrackableEventHandler(this);
+        targetsTracking = new TrackableBehaviour[targets.Length];
+        for (int i = 0; i < targets.Length; i++) {
+            targetsTracking[i] = targets[i].GetComponent<TrackableBehaviour>();
+            targetsTracking[i].RegisterTrackableEventHandler(this);
+        }
     }
 	
 	// Update is called once per frame
@@ -35,6 +30,7 @@ public class MultiTrackingScript : MonoBehaviour, ITrackableEventHandler
         {
             this.transform.parent = bestTracked.transform;
         }
+        this.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private string StatusToString(TrackableBehaviour.Status status)
@@ -69,50 +65,36 @@ public class MultiTrackingScript : MonoBehaviour, ITrackableEventHandler
 
     private GameObject GetBestTracked()
     {
-        TrackableBehaviour.Status chipsStatus = chipsTrack.CurrentStatus;
-        TrackableBehaviour.Status stoneStatus = stoneTrack.CurrentStatus;
-        if (chipsStatus == TrackableBehaviour.Status.TRACKED)
+        TrackableBehaviour.Status bestStatus = TrackableBehaviour.Status.NOT_FOUND;
+        int bestIndex = -1;
+        for (int i = 0; i < targetsTracking.Length; i++)
         {
-            return chips;
-        }
-
-        if (stoneStatus == TrackableBehaviour.Status.TRACKED)
-        {
-            return stones;
-        }
-
-        if (chipsStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
-        {
-            if (chipsStatus != stoneStatus)
+            if(Compare(targetsTracking[i].CurrentStatus, bestStatus) > 0)
             {
-                return chips;
+                bestStatus = targetsTracking[i].CurrentStatus;
+                bestIndex = i;
             }
         }
 
-        if (stoneStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
+        if (bestIndex != -1)
         {
-            if (chipsStatus != stoneStatus)
-            {
-                return stones;
-            }
+            return targets[bestIndex];
         }
-
-        if (chipsStatus == TrackableBehaviour.Status.DETECTED)
+        else
         {
-            if (chipsStatus != stoneStatus)
-            {
-                return chips;
-            }
+            return null;
         }
+    }
 
-        if (stoneStatus == TrackableBehaviour.Status.DETECTED)
-        {
-            if (chipsStatus != stoneStatus)
-            {
-                return stones;
-            }
-        }
-
-        return null;
+    private int Compare(TrackableBehaviour.Status a, TrackableBehaviour.Status b)
+    {
+        if (a == b) return 0;
+        if (a == TrackableBehaviour.Status.TRACKED) return 1;
+        if (b == TrackableBehaviour.Status.TRACKED) return -1;
+        if (a == TrackableBehaviour.Status.EXTENDED_TRACKED) return 1;
+        if (b == TrackableBehaviour.Status.EXTENDED_TRACKED) return -1;
+        if (a == TrackableBehaviour.Status.DETECTED) return 1;
+        if (b == TrackableBehaviour.Status.DETECTED) return -1;
+        return 0;
     }
 }
