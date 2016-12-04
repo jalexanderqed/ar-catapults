@@ -6,6 +6,7 @@ public class CatapultScript : MonoBehaviour {
     public Camera camera;
     public Material normalSphere;
     public Material transSphere;
+    public GameObject projectileObj;
     private GameObject projectile;
     private GameObject ghostProjectile;
     private GameObject westBand;
@@ -14,23 +15,16 @@ public class CatapultScript : MonoBehaviour {
     private GameObject eastArm;
     private CaptureTracker captureTracker = new CaptureTracker();
     private bool projectileFlying = false;
-    private Vector3 initialProjectilePosition;
     private GameObject bandFocus;
 
 	// Use this for initialization
-	void Start () {
-        projectile = this.transform.Find("Projectile").gameObject;
+	void Awake () {
         ghostProjectile = this.transform.Find("GhostProjectile").gameObject;
         westBand = this.transform.Find("WestBand").gameObject;
         eastBand = this.transform.Find("EastBand").gameObject;
         westArm = this.transform.Find("WestCatArm").gameObject;
         eastArm = this.transform.Find("EastCatArm").gameObject;
-
-        projectile.GetComponent<Rigidbody>().isKinematic = true;
-
-        bandFocus = projectile;
-
-        initialProjectilePosition = projectile.transform.position;
+        ResetProjectile();
     }
 
     // Update is called once per frame
@@ -80,9 +74,14 @@ public class CatapultScript : MonoBehaviour {
 
     private void ResetProjectile()
     {
-        projectileFlying = false;
+        if (projectile)
+        {
+            Destroy(projectile);
+        }
+        projectile = Instantiate(projectileObj);
         projectile.transform.parent = this.transform;
         projectile.transform.position = ghostProjectile.transform.position;
+        projectileFlying = false;
         projectile.GetComponent<Rigidbody>().useGravity = false;
         projectile.GetComponent<Rigidbody>().velocity = Vector3.zero;
         projectile.GetComponent<Rigidbody>().isKinematic = true;
