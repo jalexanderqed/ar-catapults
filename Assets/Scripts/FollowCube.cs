@@ -7,6 +7,7 @@ public class FollowCube : NetworkBehaviour {
 
 	public GameObject myCamObj;
 	public GameObject tablet;
+	public GameObject catapult;
 	private Camera myCam;
 
 	private GameObject camera;
@@ -32,6 +33,13 @@ public class FollowCube : NetworkBehaviour {
 		camera.GetComponent<Camera> ().enabled = false;
 		myCam.enabled = true;
 		gps = GetComponent<GPSScript> ();
+
+		//Spawn a catapult
+		GameObject obj = Instantiate (catapult);
+		obj.transform.parent = transform;
+		obj.transform.localPosition = Vector3.zero;
+		obj.transform.localRotation = Quaternion.identity;
+		obj.GetComponent<CatapultScript> ().camera = myCam;
 
 		string offGuiStr = GameObject.Find ("OffsetGui").GetComponent<OffsetGuiScript>().offset;
 		Destroy (GameObject.Find ("OffsetGui"));
