@@ -6,6 +6,7 @@ using System;
 public class FollowCube : NetworkBehaviour {
 
 	public GameObject myCamObj;
+	public GameObject tablet;
 	private Camera myCam;
 
 	private GameObject camera;
@@ -73,8 +74,8 @@ public class FollowCube : NetworkBehaviour {
 	void LateUpdate(){
 		if (!isLocalPlayer) return;
 		if (camera != null) {
-			transform.position = camera.transform.position + gps.getOffset ();
-			transform.rotation = camera.transform.rotation;
+			tablet.transform.localPosition = camera.transform.position;// + gps.getOffset ();
+			tablet.transform.localRotation = camera.transform.rotation;
 		}
 	}
 
@@ -91,5 +92,6 @@ public class FollowCube : NetworkBehaviour {
 			return;
 		offset = off;
 		gps.setOffset (off);
+		transform.position = gps.offset;
 	}
 }
