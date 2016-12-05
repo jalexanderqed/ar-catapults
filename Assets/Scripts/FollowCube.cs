@@ -122,5 +122,11 @@ public class FollowCube : NetworkBehaviour {
 		offset = off;
 		gps.setOffset (off);
 		transform.position = gps.offset;
+		//set rotation
+		float frontAngle = Quaternion.Euler(camera.transform.forward).y;
+		float heading = gps.getHeading ();
+		float diff = frontAngle - heading;
+		transform.RotateAround (transform.position, Vector3.up, diff);
+
 	}
 }
