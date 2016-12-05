@@ -27,6 +27,7 @@ public class FollowCube : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//transform.parent = GameObject.Find ("SceneCenter").transform;
 		if (!isLocalPlayer) {
 			Destroy (myCamObj);
 			return;
@@ -38,7 +39,7 @@ public class FollowCube : NetworkBehaviour {
 		gps = GetComponent<GPSScript> ();
 
 		//Spawn a catapult
-		GameObject myCatapult = Instantiate (catapult);
+		myCatapult = Instantiate (catapult);
 		myCatapult.transform.parent = transform;
 		myCatapult.transform.localPosition = Vector3.zero;
 		myCatapult.transform.localRotation = Quaternion.identity;
@@ -90,6 +91,8 @@ public class FollowCube : NetworkBehaviour {
 			tablet.transform.localRotation = camera.transform.rotation;
 		}
 		//myCatapult.GetComponent<CatapultScript> ()
+		myCatapult.transform.LookAt (tablet.transform.position);
+		myCatapult.transform.rotation = Quaternion.Euler (0, myCatapult.transform.rotation.eulerAngles.y, 0);
 		if (catScr.getLaunched ()) {
 			CmdSpawnNetProj (catScr.getPos (), catScr.getVel ());
 		}
