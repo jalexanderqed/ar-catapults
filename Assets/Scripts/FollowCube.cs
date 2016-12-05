@@ -8,8 +8,11 @@ public class FollowCube : NetworkBehaviour {
 	public GameObject myCamObj;
 	public GameObject tablet;
 	public GameObject catapult;
+	public GameObject myCatapult;
+	public GameObject netProj;
+	public GameObject netProjObj;
 	private Camera myCam;
-
+	private CatapultScript catScr;
 	private GameObject camera;
 	private GameObject serverObj;
 	private GPSScript gps;
@@ -35,11 +38,12 @@ public class FollowCube : NetworkBehaviour {
 		gps = GetComponent<GPSScript> ();
 
 		//Spawn a catapult
-		GameObject obj = Instantiate (catapult);
-		obj.transform.parent = transform;
-		obj.transform.localPosition = Vector3.zero;
-		obj.transform.localRotation = Quaternion.identity;
-		obj.GetComponent<CatapultScript> ().camera = myCam;
+		GameObject myCatapult = Instantiate (catapult);
+		myCatapult.transform.parent = transform;
+		myCatapult.transform.localPosition = Vector3.zero;
+		myCatapult.transform.localRotation = Quaternion.identity;
+		catScr = myCatapult.GetComponent<CatapultScript> ();
+		catScr.camera = myCam;
 
 		string offGuiStr = GameObject.Find ("OffsetGui").GetComponent<OffsetGuiScript>().offset;
 		Destroy (GameObject.Find ("OffsetGui"));
@@ -85,6 +89,10 @@ public class FollowCube : NetworkBehaviour {
 			tablet.transform.localPosition = camera.transform.position;// + gps.getOffset ();
 			tablet.transform.localRotation = camera.transform.rotation;
 		}
+		//myCatapult.GetComponent<CatapultScript> ()
+		if (catScr.getLaunched ()) {
+			CmdSpawnNetProj (catScr.getPos (), catScr.getVel ());
+		}
 	}
 
 	[Command]
@@ -93,6 +101,15 @@ public class FollowCube : NetworkBehaviour {
 		ServerScript server = serverObj.GetComponent<ServerScript> ();
 		if(provideLoc) server.setLoc (longit, latit);
 		offset = server.Offset (longit, latit,offProv);
+	}
+
+	[Command]
+	public void CmdSpawnNetProj(Vector3 pos,Vector3 vel){
+		netProj = Instantiate (netProjObj);
+		netProj.transform.position = pos;
+		netProj.GetComponent<Rigidbody> ().velocity = vel;
+
+		NetworkServer.Spawn (netProj);
 	}
 
 	void OnGetOffset(Vector3 off){

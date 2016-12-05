@@ -17,6 +17,8 @@ public class CatapultScript : MonoBehaviour {
     private bool projectileFlying = false;
     private GameObject bandFocus;
 
+	private bool didLaunch = false;
+
 	// Use this for initialization
 	void Awake () {
         ghostProjectile = this.transform.Find("GhostProjectile").gameObject;
@@ -70,6 +72,9 @@ public class CatapultScript : MonoBehaviour {
         projectileFlying = true;
         bandFocus = ghostProjectile;
         projectile.GetComponent<Renderer>().sharedMaterial = normalSphere;
+		projectile.GetComponent<Renderer> ().enabled = false;
+		projectile.GetComponent<SphereCollider> ().enabled = false;
+		didLaunch = true;
     }
 
     private void ResetProjectile()
@@ -87,6 +92,8 @@ public class CatapultScript : MonoBehaviour {
         projectile.GetComponent<Rigidbody>().isKinematic = true;
         projectile.GetComponent<Renderer>().sharedMaterial = normalSphere;
         bandFocus = projectile;
+		projectile.GetComponent<Renderer> ().enabled = true;
+		projectile.GetComponent<SphereCollider> ().enabled = true;
     }
 
     private void UpdateBands()
@@ -134,6 +141,22 @@ public class CatapultScript : MonoBehaviour {
             }
         }
     }
+
+	public bool getLaunched(){
+		if (didLaunch) {
+			didLaunch = false;
+			return true;
+		}
+		return false;
+	}
+
+	public Vector3 getPos(){
+		return projectile.transform.position;
+	}
+
+	public Vector3 getVel(){
+		return projectile.GetComponent<Rigidbody> ().velocity;
+	}
 }
 
 enum CaptureState
