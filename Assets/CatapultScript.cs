@@ -7,6 +7,7 @@ public class CatapultScript : MonoBehaviour {
     public Material normalSphere;
     public Material transSphere;
     public GameObject projectileObj;
+	public bool amLocal = true;
     private GameObject projectile;
     private GameObject ghostProjectile;
     private GameObject westBand;
@@ -20,7 +21,7 @@ public class CatapultScript : MonoBehaviour {
 	private bool didLaunch = false;
 
 	// Use this for initialization
-	void Awake () {
+	void Start () {
         ghostProjectile = this.transform.Find("GhostProjectile").gameObject;
         westBand = this.transform.Find("WestBand").gameObject;
         eastBand = this.transform.Find("EastBand").gameObject;
@@ -31,6 +32,8 @@ public class CatapultScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+		if (!amLocal)
+			return;
         CheckTouches();
 
         float dist = Vector3.Distance(camera.transform.position, projectile.transform.position);
@@ -52,6 +55,8 @@ public class CatapultScript : MonoBehaviour {
 
     void LateUpdate()
     {
+		if (!amLocal)
+			return;
         UpdateBands();
     }
 
@@ -73,12 +78,13 @@ public class CatapultScript : MonoBehaviour {
         bandFocus = ghostProjectile;
         projectile.GetComponent<Renderer>().sharedMaterial = normalSphere;
 		projectile.GetComponent<Renderer> ().enabled = false;
-		projectile.GetComponent<SphereCollider> ().enabled = false;
 		didLaunch = true;
     }
 
     private void ResetProjectile()
     {
+		if (!amLocal)
+			return;
         if (projectile)
         {
             Destroy(projectile);
@@ -93,7 +99,7 @@ public class CatapultScript : MonoBehaviour {
         projectile.GetComponent<Renderer>().sharedMaterial = normalSphere;
         bandFocus = projectile;
 		projectile.GetComponent<Renderer> ().enabled = true;
-		projectile.GetComponent<SphereCollider> ().enabled = true;
+
     }
 
     private void UpdateBands()
@@ -116,6 +122,8 @@ public class CatapultScript : MonoBehaviour {
 
     private void CheckTouches()
     {
+		if (!amLocal)
+			return;
         foreach (Touch touch in Input.touches)
         {
             if (touch.phase == TouchPhase.Began)
