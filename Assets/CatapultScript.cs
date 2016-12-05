@@ -8,6 +8,7 @@ public class CatapultScript : MonoBehaviour {
     public Material transSphere;
     public GameObject projectileObj;
 	public bool amLocal = true;
+	public GameObject netProjShow;
     private GameObject projectile;
     private GameObject ghostProjectile;
     private GameObject westBand;
@@ -16,12 +17,13 @@ public class CatapultScript : MonoBehaviour {
     private GameObject eastArm;
     private CaptureTracker captureTracker = new CaptureTracker();
     private bool projectileFlying = false;
-    private GameObject bandFocus;
+	private GameObject bandFocus;
 
 	private bool didLaunch = false;
 
 	// Use this for initialization
 	void Start () {
+		bandFocus = netProjShow;
         ghostProjectile = this.transform.Find("GhostProjectile").gameObject;
         westBand = this.transform.Find("WestBand").gameObject;
         eastBand = this.transform.Find("EastBand").gameObject;
@@ -30,10 +32,22 @@ public class CatapultScript : MonoBehaviour {
         ResetProjectile();
     }
 
+	public void setLocalProperties(){
+		if (!amLocal) {
+			return;
+		}
+		netProjShow.GetComponent<Renderer> ().enabled = false;
+	}
+
     // Update is called once per frame
     void Update() {
-		if (!amLocal)
+		if (!amLocal) {
+			netProjShow.GetComponent<Renderer>().enabled = !(netProjShow.transform.position == ghostProjectile.transform.position);
 			return;
+		}
+		if (projectile && projectile.GetComponent<Rigidbody>().isKinematic) {
+			netProjShow.transform.position = projectile.transform.position;
+		}
         CheckTouches();
 
         float dist = Vector3.Distance(camera.transform.position, projectile.transform.position);
@@ -55,8 +69,6 @@ public class CatapultScript : MonoBehaviour {
 
     void LateUpdate()
     {
-		if (!amLocal)
-			return;
         UpdateBands();
     }
 
@@ -79,6 +91,7 @@ public class CatapultScript : MonoBehaviour {
         projectile.GetComponent<Renderer>().sharedMaterial = normalSphere;
 		projectile.GetComponent<Renderer> ().enabled = false;
 		didLaunch = true;
+		netProjShow.transform.position = ghostProjectile.transform.position;
     }
 
     private void ResetProjectile()

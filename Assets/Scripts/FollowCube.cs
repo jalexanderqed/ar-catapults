@@ -33,6 +33,7 @@ public class FollowCube : NetworkBehaviour {
 			Destroy (myCamObj);
 			return;
 		}
+		catScr.setLocalProperties ();
         camera = GameObject.Find("SceneCamera");
 		myCam = myCamObj.GetComponent<Camera> ();
 		camera.GetComponent<Camera> ().enabled = false;
