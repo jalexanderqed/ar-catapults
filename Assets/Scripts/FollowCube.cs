@@ -135,6 +135,14 @@ public class FollowCube : NetworkBehaviour {
 		NetworkServer.Spawn (netProj);
 	}
 
+	[Command]
+	void CmdStartGame(){
+		
+		GameObject serverObj = GameObject.Find ("ServerObj");
+		ServerScript server = serverObj.GetComponent<ServerScript> ();
+		server.startGame ();
+	}
+
 	void OnGetOffset(Vector3 off){
 		if (!isLocalPlayer)
 			return;
@@ -148,6 +156,6 @@ public class FollowCube : NetworkBehaviour {
 	public void startGame(){
 		if (!isLocalPlayer)
 			return;
-		
+		CmdStartGame ();
 	}
 }

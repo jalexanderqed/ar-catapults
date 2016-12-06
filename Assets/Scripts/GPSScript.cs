@@ -46,8 +46,8 @@ public class GPSScript : MonoBehaviour {
 				txt.text = "Unable to determine device location";
 				return;
 			} else if (Input.location.status == LocationServiceStatus.Running) {
-                txt.text = "Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp
-					+ "\nCompass: " + newCom.trueHeading + "\n Unity Offset: " + newCom.magneticHeading + "," + newCom.rawVector.x + "\ni: " + Input.compass.trueHeading;
+				txt.text = "";/*"Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp
+					+ "\nCompass: " + newCom.trueHeading + "\n Unity Offset: " + newCom.magneticHeading + "," + newCom.rawVector.x + "\ni: " + Input.compass.trueHeading;*/
 				latitude = Input.location.lastData.latitude;
 				longitude = Input.location.lastData.longitude;
 

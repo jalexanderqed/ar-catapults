@@ -18,7 +18,11 @@ public class ServerScript : NetworkBehaviour {
 
 	private GPSScript gps;
 
+	private bool gameStarted = false;
+
 	public int testing;
+
+	public GameObject castleObj;
 
 	public float toRadians(float degs){
 		return ((Mathf.PI / 180f) * degs);
@@ -92,4 +96,30 @@ public class ServerScript : NetworkBehaviour {
 		choseLocation = chose;
 	}
 
+	public void startGame(){
+		Debug.Log ("Starting game!");
+		if (gameStarted)
+			return;
+		gameStarted = true;
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		if (players.Length != 2) {
+			Debug.Log ("This game only supports exactly two players");
+			return;
+		}
+		Vector3 pointVect = (players [0].transform.position - players [1].transform.position).normalized;
+
+		GameObject castle1 = Instantiate (castleObj);
+		GameObject castle2 = Instantiate (castleObj);
+		castle1.transform.position = players [0].transform.position + pointVect * 10;
+		castle2.transform.position = players [1].transform.position - pointVect * 10;
+		castle1.transform.rotation = Quaternion.LookRotation (-pointVect);
+		castle2.transform.rotation = Quaternion.LookRotation (pointVect);
+
+		NetworkServer.Spawn (castle1);
+		NetworkServer.Spawn (castle2);
+	}
+
+	public void endGame(){
+
+	}
 }
