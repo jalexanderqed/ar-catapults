@@ -15,8 +15,11 @@ public class FollowCube : NetworkBehaviour {
 	private GameObject camera;
 	private GameObject serverObj;
 	private GPSScript gps;
+	private MultiTrackingScript trackScript;
 	//private ServerScript server;
 	private int located = 0;
+
+	private bool useCompass = false;
 
 	private bool OffsetProvided = false;
 
@@ -33,6 +36,7 @@ public class FollowCube : NetworkBehaviour {
 			Destroy (myCamObj);
 			return;
 		}
+		trackScript = GameObject.Find ("SceneCenter").GetComponent<MultiTrackingScript> ();
 		catScr.setLocalProperties ();
         camera = GameObject.Find("SceneCamera");
 		myCam = myCamObj.GetComponent<Camera> ();
@@ -97,6 +101,15 @@ public class FollowCube : NetworkBehaviour {
 		if (catScr.getLaunched ()) {
 			CmdSpawnNetProj (catScr.getPos (), catScr.getVel ());
 		}
+		if (useCompass) {
+			float frontAngle = tablet.transform.rotation.eulerAngles.y;
+			float heading = gps.getHeading ();
+			float diff = frontAngle - heading;
+			GameObject mainTrack = trackScript.GetBestTracked ();
+			if (mainTrack) {
+				mainTrack.transform.RotateAround (transform.position, Vector3.up, -diff);
+			}
+		}
 	}
 
 	[Command]
@@ -123,10 +136,6 @@ public class FollowCube : NetworkBehaviour {
 		gps.setOffset (off);
 		transform.position = gps.offset;
 		//set rotation
-		float frontAngle = Quaternion.Euler(camera.transform.forward).y;
-		float heading = gps.getHeading ();
-		float diff = frontAngle - heading;
-		transform.RotateAround (transform.position, Vector3.up, diff);
-
+		//transform.rotation = Quaternion.Euler(0,heading + 90,0);
 	}
 }

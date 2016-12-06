@@ -63,7 +63,7 @@ public class MultiTrackingScript : MonoBehaviour, ITrackableEventHandler
         return ret;
     }
 
-    private GameObject GetBestTracked()
+    public GameObject GetBestTracked()
     {
         TrackableBehaviour.Status bestStatus = TrackableBehaviour.Status.NOT_FOUND;
         int bestIndex = -1;
