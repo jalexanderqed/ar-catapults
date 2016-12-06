@@ -24,6 +24,15 @@ public class CastleScript : NetworkBehaviour {
 		if (isServer)
 			return;
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		Vector3 p1Vect = transform.position - players [0].transform.position;
+		Vector3 p2Vect = transform.position - players [1].transform.position;
+
+		if (p1Vect.magnitude > p2Vect.magnitude) {
+			players [0].GetComponent<FollowCube> ().win();
+		} else {
+			players [1].GetComponent<FollowCube> ().win();
+		}
+
 		for (int i = 0; i < players.Length; i++) {
 			players [i].GetComponent<FollowCube> ().makeGuiObj ();
 		}

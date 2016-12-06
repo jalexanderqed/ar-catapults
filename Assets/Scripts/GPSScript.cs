@@ -19,6 +19,7 @@ public class GPSScript : MonoBehaviour {
 
 	void Start () {
 		txt = text.GetComponent<TextMesh>();
+		txt.text = "";
 		if (!Input.location.isEnabledByUser) {
 			txt.text = "Please enable location services!";
 			locEnabled = false;
@@ -41,12 +42,12 @@ public class GPSScript : MonoBehaviour {
 	void Update () {
 		if (locEnabled) {
 			if (Input.location.status == LocationServiceStatus.Initializing) {
-				txt.text = "Initializing";
+				//txt.text = "Initializing";
 			} else if (Input.location.status == LocationServiceStatus.Failed) {
-				txt.text = "Unable to determine device location";
+				//txt.text = "Unable to determine device location";
 				return;
 			} else if (Input.location.status == LocationServiceStatus.Running) {
-				txt.text = "";/*"Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp
+				/*txt.text = "";"Latitude: " + Input.location.lastData.latitude + "\nLongitude: " + Input.location.lastData.longitude + "\nAltitude: " + Input.location.lastData.altitude + "\nAccuracy: " + Input.location.lastData.horizontalAccuracy + "\nTime: " + Input.location.lastData.timestamp
 					+ "\nCompass: " + newCom.trueHeading + "\n Unity Offset: " + newCom.magneticHeading + "," + newCom.rawVector.x + "\ni: " + Input.compass.trueHeading;*/
 				latitude = Input.location.lastData.latitude;
 				longitude = Input.location.lastData.longitude;
@@ -80,5 +81,10 @@ public class GPSScript : MonoBehaviour {
 
 	public Vector3 getOffset(){
 		return offset;
+	}
+
+	public void setText(string str){
+		txt = text.GetComponent<TextMesh>();
+		txt.text = str;
 	}
 }

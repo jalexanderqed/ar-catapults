@@ -192,6 +192,13 @@ public class FollowCube : NetworkBehaviour {
 	public void startGame(){
 		if (!isLocalPlayer)
 			return;
+		gps.setText ("");
 		CmdStartGame ();
+	}
+
+	public void win(){
+		if (!isLocalPlayer)
+			return;
+		gps.setText ("You win!!");
 	}
 }
