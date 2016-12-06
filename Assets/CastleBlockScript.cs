@@ -14,3 +14,5 @@ public class CastleBlockScript : MonoBehaviour {
 	
 	}
 }
+
+//Ive networked up to CastleBlock (5)

@@ -10,6 +10,10 @@ public class FollowCube : NetworkBehaviour {
 	public GameObject myCatapult;
 	public GameObject netProj;
 	public GameObject netProjObj;
+
+	public GameObject guiObj;
+
+	private GameObject myGuiObj;
 	private Camera myCam;
 	private CatapultScript catScr;
 	private GameObject camera;
@@ -36,6 +40,8 @@ public class FollowCube : NetworkBehaviour {
 			Destroy (myCamObj);
 			return;
 		}
+		myGuiObj = Instantiate (guiObj);
+		myGuiObj.GetComponent<GameStartGuiScript> ().player = this.gameObject;
 		trackScript = GameObject.Find ("SceneCenter").GetComponent<MultiTrackingScript> ();
 		catScr.setLocalProperties ();
         camera = GameObject.Find("SceneCamera");
@@ -137,5 +143,11 @@ public class FollowCube : NetworkBehaviour {
 		transform.position = gps.offset;
 		//set rotation
 		//transform.rotation = Quaternion.Euler(0,heading + 90,0);
+	}
+
+	public void startGame(){
+		if (!isLocalPlayer)
+			return;
+		
 	}
 }
