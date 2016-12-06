@@ -120,6 +120,8 @@ public class ServerScript : NetworkBehaviour {
 	}
 
 	public void endGame(){
-
+		if (!gameStarted)
+			return;
+		gameStarted = false;
 	}
 }

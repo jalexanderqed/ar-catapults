@@ -69,11 +69,10 @@ public class MultiTrackingScript : MonoBehaviour, ITrackableEventHandler
         int bestIndex = -1;
         for (int i = 0; i < targetsTracking.Length; i++)
         {
-            if(Compare(targetsTracking[i].CurrentStatus, bestStatus) > 0)
-            {
-                bestStatus = targetsTracking[i].CurrentStatus;
-                bestIndex = i;
-            }
+			if (Compare (targetsTracking [i].CurrentStatus, bestStatus) > 0) {
+				bestStatus = targetsTracking [i].CurrentStatus;
+				bestIndex = i;
+			}
         }
 
         if (bestIndex != -1)
