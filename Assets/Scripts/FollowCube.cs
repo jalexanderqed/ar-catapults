@@ -30,6 +30,10 @@ public class FollowCube : NetworkBehaviour {
 	[SyncVar(hook = "OnGetOffset")]
 	public Vector3 offset;
 
+    private float startTime;
+    private int numCompassSamples = 0;
+    private float compassSampleSum = 0;
+
 
 	// Use this for initialization
 	void Start () {
@@ -64,6 +68,7 @@ public class FollowCube : NetworkBehaviour {
 			OffsetProvided = true;
 			offset = new Vector3 (int.Parse (strs [0]), 0, int.Parse (strs [1]));
 		}
+        startTime = Time.time;
 	}
 
 	public void makeGuiObj(){
@@ -115,13 +120,15 @@ public class FollowCube : NetworkBehaviour {
 		if (catScr.getLaunched ()) {
 			CmdSpawnNetProj (catScr.getPos (), catScr.getVel ());
 		}
-		if (useCompass) {
+		if (useCompass && (Time.time - startTime) < 1) {
 			float frontAngle = tablet.transform.rotation.eulerAngles.y;
 			float heading = gps.getHeading ();
 			float diff = frontAngle - heading;
+            compassSampleSum += diff;
+            numCompassSamples++;
 			GameObject mainTrack = trackScript.GetBestTracked ();
 			if (mainTrack) {
-				mainTrack.transform.RotateAround (transform.position, Vector3.up, -diff);
+				mainTrack.transform.RotateAround (transform.position, Vector3.up, -1 * (compassSampleSum / numCompassSamples));
 			}
 		}
 	}
