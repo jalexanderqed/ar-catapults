@@ -8,10 +8,18 @@ public class CastleScript : NetworkBehaviour {
 		if (!isServer)
 			return;
 		int children = transform.childCount;
-		if (children < 5) {
+		if (children < 8) {
 			GameObject serverObj = GameObject.Find ("ServerObj");
 			ServerScript server = serverObj.GetComponent<ServerScript> ();
 			server.endGame ();
+		}
+	}
+	void OnDestroy(){
+		if (isServer)
+			return;
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		for (int i = 0; i < players.Length; i++) {
+			players [i].GetComponent<FollowCube> ().makeGuiObj ();
 		}
 	}
 }

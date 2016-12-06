@@ -120,8 +120,12 @@ public class ServerScript : NetworkBehaviour {
 	}
 
 	public void endGame(){
+		Debug.Log ("Its over!!");
 		if (!gameStarted)
 			return;
 		gameStarted = false;
+		GameObject[] castles = GameObject.FindGameObjectsWithTag ("CastleTag");
+		Destroy (castles [0]);
+		Destroy (castles [1]);
 	}
 }

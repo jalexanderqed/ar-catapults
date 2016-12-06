@@ -40,8 +40,7 @@ public class FollowCube : NetworkBehaviour {
 			Destroy (myCamObj);
 			return;
 		}
-		myGuiObj = Instantiate (guiObj);
-		myGuiObj.GetComponent<GameStartGuiScript> ().player = this.gameObject;
+		makeGuiObj ();
 		trackScript = GameObject.Find ("SceneCenter").GetComponent<MultiTrackingScript> ();
 		catScr.setLocalProperties ();
         camera = GameObject.Find("SceneCamera");
@@ -66,7 +65,16 @@ public class FollowCube : NetworkBehaviour {
 			offset = new Vector3 (int.Parse (strs [0]), 0, int.Parse (strs [1]));
 		}
 	}
-	
+
+	public void makeGuiObj(){
+		if (!isLocalPlayer)
+			return;
+		if (myGuiObj == null) {
+			myGuiObj = Instantiate (guiObj);
+			myGuiObj.GetComponent<GameStartGuiScript> ().player = this.gameObject;
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (!isLocalPlayer) return;

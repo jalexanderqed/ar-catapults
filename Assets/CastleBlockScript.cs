@@ -5,7 +5,7 @@ using System.Collections;
 public class CastleBlockScript : MonoBehaviour {
 
 	void Update () {
-		if (transform.position.y < -2)
+		if (transform.GetChild(0).position.y < -2)
 			Destroy (gameObject);
 	}
 }
