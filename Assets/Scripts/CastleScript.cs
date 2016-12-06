@@ -13,7 +13,7 @@ public class CastleScript : NetworkBehaviour {
 	void Update () {
 		if (!isServer)
 			return;
-		if (numLeft < 8) {
+		if (numLeft < 12) {
 			GameObject serverObj = GameObject.Find ("ServerObj");
 			ServerScript server = serverObj.GetComponent<ServerScript> ();
 			server.endGame ();

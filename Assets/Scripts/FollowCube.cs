@@ -130,7 +130,8 @@ public class FollowCube : NetworkBehaviour {
                 markerFound = true;
                 compassStartTime = Time.time;
             }
-			
+
+            /*
 			if ((Time.time - compassStartTime) < 2) {
                 float frontAngle = tablet.transform.rotation.eulerAngles.y;
                 float heading = gps.getHeading();
@@ -138,12 +139,18 @@ public class FollowCube : NetworkBehaviour {
                 compassSampleSum += diff;
                 numCompassSamples++;
 			}
-            else if(!compassRotated)
-            {
-                compassRotated = true;
-                mainTrack.transform.RotateAround(mainTrack.transform.position, Vector3.up, -1 * (compassSampleSum / numCompassSamples));
-                //transform.RotateAround(transform.position, Vector3.up, (compassSampleSum / numCompassSamples));
-            }
+            */
+
+            float frontAngle = tablet.transform.rotation.eulerAngles.y;
+            float heading = gps.getHeading();
+            float diff = frontAngle - heading;
+            numCompassSamples++;
+            //compassRotated = true;
+            Quaternion orig = mainTrack.transform.rotation;
+            mainTrack.transform.RotateAround(mainTrack.transform.position, Vector3.up, -diff);
+            Quaternion newR = mainTrack.transform.rotation;
+            mainTrack.transform.rotation = Quaternion.Slerp(orig, newR, 1.0f / numCompassSamples);
+            //transform.RotateAround(transform.position, Vector3.up, (compassSampleSum / numCompassSamples));
 		}
 	}
 

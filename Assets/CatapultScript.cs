@@ -75,7 +75,7 @@ public class CatapultScript : MonoBehaviour {
     private void CaptureProjectile()
     {
         projectile.transform.parent = camera.transform;
-        projectile.transform.localPosition = new Vector3(0, 0, 0.5f);
+        projectile.transform.localPosition = new Vector3(0, -0.5f, 1.5f);
         projectile.transform.localRotation = Quaternion.Euler(0, 0, 0);
         projectile.GetComponent<Renderer>().sharedMaterial = transSphere;
     }
