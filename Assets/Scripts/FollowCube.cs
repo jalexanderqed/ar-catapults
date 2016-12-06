@@ -23,14 +23,16 @@ public class FollowCube : NetworkBehaviour {
 	//private ServerScript server;
 	private int located = 0;
 
-	private bool useCompass = false;
+	private bool useCompass = true;
 
 	private bool OffsetProvided = false;
 
 	[SyncVar(hook = "OnGetOffset")]
 	public Vector3 offset;
 
-    private float startTime;
+    private float compassStartTime;
+    private bool markerFound = false;
+    private bool compassRotated = false;
     private int numCompassSamples = 0;
     private float compassSampleSum = 0;
 
@@ -68,7 +70,7 @@ public class FollowCube : NetworkBehaviour {
 			OffsetProvided = true;
 			offset = new Vector3 (int.Parse (strs [0]), 0, int.Parse (strs [1]));
 		}
-        startTime = Time.time;
+        compassStartTime = Time.time;
 	}
 
 	public void makeGuiObj(){
@@ -120,16 +122,28 @@ public class FollowCube : NetworkBehaviour {
 		if (catScr.getLaunched ()) {
 			CmdSpawnNetProj (catScr.getPos (), catScr.getVel ());
 		}
-		if (useCompass && (Time.time - startTime) < 1) {
-			float frontAngle = tablet.transform.rotation.eulerAngles.y;
-			float heading = gps.getHeading ();
-			float diff = frontAngle - heading;
-            compassSampleSum += diff;
-            numCompassSamples++;
-			GameObject mainTrack = trackScript.GetBestTracked ();
-			if (mainTrack) {
-				mainTrack.transform.RotateAround (transform.position, Vector3.up, -1 * (compassSampleSum / numCompassSamples));
+
+        GameObject mainTrack = trackScript.GetBestTracked();
+        if (mainTrack != null && useCompass) {
+            if (!markerFound)
+            {
+                markerFound = true;
+                compassStartTime = Time.time;
+            }
+			
+			if ((Time.time - compassStartTime) < 2) {
+                float frontAngle = tablet.transform.rotation.eulerAngles.y;
+                float heading = gps.getHeading();
+                float diff = frontAngle - heading;
+                compassSampleSum += diff;
+                numCompassSamples++;
 			}
+            else if(!compassRotated)
+            {
+                compassRotated = true;
+                mainTrack.transform.RotateAround(mainTrack.transform.position, Vector3.up, -1 * (compassSampleSum / numCompassSamples));
+                //transform.RotateAround(transform.position, Vector3.up, (compassSampleSum / numCompassSamples));
+            }
 		}
 	}
 
