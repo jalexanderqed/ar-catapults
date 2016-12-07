@@ -9,8 +9,8 @@ public class SpawnPillGuy : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        pillGuy = Instantiate(pillGuyObject);
-		pillGuy.GetComponent<PillGuyMovement>().myTablet = tablet.transform.gameObject;
+        //pillGuy = Instantiate(pillGuyObject);
+		//pillGuy.GetComponent<PillGuyMovement>().myTablet = tablet.transform.gameObject;
 	}
 	
 	// Update is called once per frame
@@ -20,6 +20,6 @@ public class SpawnPillGuy : MonoBehaviour {
 
     void OnDestroy()
     {
-        Destroy(pillGuy);
+        //Destroy(pillGuy);
     }
 }

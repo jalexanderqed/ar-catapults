@@ -14,6 +14,10 @@ public class FollowCube : NetworkBehaviour {
 	public GameObject offsetGuiObj;
 	public GameObject guiObj;
 
+	public GameObject pillGuyObject;
+
+	private GameObject pillGuy;
+
 	private GameObject myGuiObj;
 	private Camera myCam;
 	private CatapultScript catScr;
@@ -31,11 +35,11 @@ public class FollowCube : NetworkBehaviour {
 	[SyncVar(hook = "OnGetOffset")]
 	public Vector3 offset;
 
-    private float compassStartTime;
+    //private float compassStartTime;
     private bool markerFound = false;
-    private bool compassRotated = false;
+    //private bool compassRotated = false;
     private int numCompassSamples = 0;
-    private float compassSampleSum = 0;
+    //private float compassSampleSum = 0;
 
 
 	// Use this for initialization
@@ -43,6 +47,8 @@ public class FollowCube : NetworkBehaviour {
 		catScr = myCatapult.GetComponent<CatapultScript> ();
 		//transform.parent = GameObject.Find ("SceneCenter").transform;
 		if (!isLocalPlayer) {
+			pillGuy = Instantiate(pillGuyObject);
+			pillGuy.GetComponent<PillGuyMovement>().myTablet = tablet.transform.gameObject;
 			catScr.amLocal = false;
 			Destroy (myCamObj);
 			return;
@@ -71,7 +77,7 @@ public class FollowCube : NetworkBehaviour {
 			OffsetProvided = true;
 			offset = new Vector3 (int.Parse (strs [0]), 0, int.Parse (strs [1]));
 		}
-        compassStartTime = Time.time;
+        //compassStartTime = Time.time;
 	}
 
 	public void makeGuiObj(){
@@ -134,7 +140,7 @@ public class FollowCube : NetworkBehaviour {
             if (!markerFound)
             {
                 markerFound = true;
-                compassStartTime = Time.time;
+                //compassStartTime = Time.time;
             }
 
             /*
@@ -227,6 +233,7 @@ public class FollowCube : NetworkBehaviour {
 			if(myGuiObj) Destroy (myGuiObj);
 			GameObject newOffsetGui = Instantiate (offsetGuiObj);
 			newOffsetGui.name = "OffsetGui";
+			Destroy(pillGuy);
 		}
 	}
 }
