@@ -100,6 +100,10 @@ public class ServerScript : NetworkBehaviour {
 		Debug.Log ("Starting game!");
 		if (gameStarted)
 			return;
+		GameObject[] castles = GameObject.FindGameObjectsWithTag ("CastleTag");
+		for(int i = 0;i < castles.Length;i++){
+				Destroy (castles [i]);
+		}
 		gameStarted = true;
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
 		if (players.Length != 2) {
@@ -124,8 +128,5 @@ public class ServerScript : NetworkBehaviour {
 		if (!gameStarted)
 			return;
 		gameStarted = false;
-		GameObject[] castles = GameObject.FindGameObjectsWithTag ("CastleTag");
-		Destroy (castles [0]);
-		Destroy (castles [1]);
 	}
 }

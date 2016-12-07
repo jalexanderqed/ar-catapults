@@ -11,6 +11,7 @@ public class FollowCube : NetworkBehaviour {
 	public GameObject netProj;
 	public GameObject netProjObj;
 
+	public GameObject offsetGuiObj;
 	public GameObject guiObj;
 
 	private GameObject myGuiObj;
@@ -80,6 +81,11 @@ public class FollowCube : NetworkBehaviour {
 			myGuiObj = Instantiate (guiObj);
 			myGuiObj.GetComponent<GameStartGuiScript> ().player = this.gameObject;
 		}
+	}
+
+	public void removeGuiObj(){
+		if (myGuiObj)
+			Destroy (myGuiObj);
 	}
 
 	// Update is called once per frame
@@ -200,5 +206,27 @@ public class FollowCube : NetworkBehaviour {
 		if (!isLocalPlayer)
 			return;
 		gps.setText ("You win!!");
+	}
+
+	public void lose(){
+		if (!isLocalPlayer)
+			return;
+		gps.setText ("You lose :(");
+	}
+
+	public void removeText(){
+		if (!isLocalPlayer)
+			return;
+		gps.setText ("");
+	}
+
+	void OnDestroy(){
+		if (isLocalPlayer) {
+			camera = GameObject.Find("SceneCamera");
+			camera.GetComponent<Camera> ().enabled = true;
+			if(myGuiObj) Destroy (myGuiObj);
+			GameObject newOffsetGui = Instantiate (offsetGuiObj);
+			newOffsetGui.name = "OffsetGui";
+		}
 	}
 }
