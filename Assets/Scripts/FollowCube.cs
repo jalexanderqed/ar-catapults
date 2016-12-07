@@ -47,8 +47,10 @@ public class FollowCube : NetworkBehaviour {
 		catScr = myCatapult.GetComponent<CatapultScript> ();
 		//transform.parent = GameObject.Find ("SceneCenter").transform;
 		if (!isLocalPlayer) {
-			pillGuy = Instantiate(pillGuyObject);
-			pillGuy.GetComponent<PillGuyMovement>().myTablet = tablet.transform.gameObject;
+			if (!isServer) {
+				pillGuy = Instantiate (pillGuyObject);
+				pillGuy.GetComponent<PillGuyMovement> ().myTablet = tablet.transform.gameObject;
+			}
 			catScr.amLocal = false;
 			Destroy (myCamObj);
 			return;
