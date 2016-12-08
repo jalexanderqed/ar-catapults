@@ -24,6 +24,7 @@ public class FollowCube : NetworkBehaviour {
 	private GameObject camera;
 	private GameObject serverObj;
 	private GPSScript gps;
+	private GameObject background;
 	private MultiTrackingScript trackScript;
 	//private ServerScript server;
 	private int located = 0;
@@ -59,6 +60,14 @@ public class FollowCube : NetworkBehaviour {
 		trackScript = GameObject.Find ("SceneCenter").GetComponent<MultiTrackingScript> ();
 		catScr.setLocalProperties ();
         camera = GameObject.Find("SceneCamera");
+
+		background = GameObject.Find("BackgroundPlane");
+		Vector3 storePos = background.transform.localPosition;
+		Quaternion storeRot = background.transform.localRotation;
+		background.transform.parent = myCamObj.transform;
+		background.transform.localPosition = storePos;
+		background.transform.localRotation = storeRot;
+
 		myCam = myCamObj.GetComponent<Camera> ();
 		camera.GetComponent<Camera> ().enabled = false;
 		myCam.enabled = true;
@@ -229,13 +238,17 @@ public class FollowCube : NetworkBehaviour {
 	}
 
 	void OnDestroy(){
+		if(pillGuy) Destroy(pillGuy);
 		if (isLocalPlayer) {
-			camera = GameObject.Find("SceneCamera");
 			camera.GetComponent<Camera> ().enabled = true;
 			if(myGuiObj) Destroy (myGuiObj);
 			GameObject newOffsetGui = Instantiate (offsetGuiObj);
 			newOffsetGui.name = "OffsetGui";
-			Destroy(pillGuy);
+			Vector3 storePos = background.transform.localPosition;
+			Quaternion storeRot = background.transform.localRotation;
+			background.transform.parent = camera.transform;
+			background.transform.localPosition = storePos;
+			background.transform.localRotation = storeRot;
 		}
 	}
 }
