@@ -127,30 +127,39 @@
     <h3>Unity and Unet</h3>
     <p>
         We built our game in Unity, and accomplished communication between devices over Unity’s built-in Unet system.
-        While John has a fair amount of experience in Unity, neither of us had ever actually programmed GUI’s in it
-        before, so the menus are not very pretty or helpful. Unet uses a host-clients model, but any device can be a
+        Unet uses a host-clients model, but any device can be a
         host or client. When setting up a game, one player starts a server on their device and the other connects to it.
         Unfortunately we had difficulty getting out tablets to accept messages from the other, and so instead during
         testing and the demonstration we set up one of our computers as the server (although not participating as a
         player) and had both tablets join as clients.
     </p>
-    <h4>[Picture of menu]</h4>
     <p>
         When one of the tablets is used a server host, when it begins the server it checks it’s GPS location and decides
         that that location is (0,0,0) in Unity. When one of our computers is used a server, they cannot figure out their
         in-world position. Instead, when the first tablet connects and tells the server it’s GPS position, the server
-        decides that that position is the origin and replies with an offset of (0,0). Players may connect with a pre-decided offset, and this is input in the unlabeled text box in the upper left corner by typing in a string of the form "x,y". Leaving it empty results in GPS being used.
+        decides that that position is the origin and replies with an offset of (0,0).
     </p>
     <p>
         Once the initial rotating and offsetting is done, we can easily use Unity’s default functionality for syncing
         object transforms to keep them correct. Each player independently tracks and updates their own position and Unet
         does the work of making the same changes on the other player’s screen. We also sync the positions of the the
         catapult components for each player and the positions of all the castle blocks. The flying teapots, crumbling
-        castles, and checking for winning is all calculated on the server and displayed on the clients. Conversely, the
-        “Pillguys”, the tall, mohawked avatars of the players, are never actually seen by the server and calculated and
-        moved entirely locally. This means the teapots, which are calculated by the server, will not collide with them.
+        castles, and checking for winning is all calculated on the server and displayed on the clients. To best utilize the networking, we made sure tablet positions were synced as often as possible so they move fluidly but dramatically decreased the rate at which blocks of each castle are synced as there are many of them.
     </p>
     <h3>Gameplay</h3>
+
+    <p>We decided to utilize our system by designing a game where each player is given a catapult (really a slignshot) and tasked with toppling the castle of the other player. This seemed like a fun game and would require a large amount of movement in the real world to pull back and launch the projectiles. The actual markers we support are the pebbles and wood chips markers. These are expected to be placed on a wall in portrait orientation. There is a right way up as well, although it the marker is upside down the main effect will be that the virtual world is also displayed upside down, so the player can easily realize they need to flip around the marker. </p>
+
+    <h4>[Picture of crumbling castle]</h4>
+
+    <p>To correctly set up a game, the host should either choose the large top button to be both a host and a client or the "LAn Server Only" button to only be a host. While John has a fair amount of experience in Unity, neither of us had ever actually programmed GUI’s in it
+        before, so the menus are not very pretty or helpful. We also used Unity's default networking GUI, although we had to scale it up as it originally appeared tiny on our tablet screens. The other player must connect to the server via the IP address field. As it exists currently, the project only accepts exactly two players. Players may connect with a pre-decided offset, and this is input in the unlabeled text box in the upper left corner by typing in a string of the form "x,y". Leaving it empty results in GPS being used.</p>
+
+    <h4>[Picture of menu]</h4>
+
+    <p>Once both players are in, if either player presses the "Start Game" button, castles spawn and the game is on. Players much pull back their teapots in order to fire them. The game continues until one of the castles topples sufficiently. </p>
+
+    <h4>[Picture of YOU WIN]</h4>
 
     <hr>
     <h2>Code Structure</h2>
@@ -164,18 +173,13 @@
 
 
         <br>
-        -GPSScript
+        <h3>GPSScript</h3>
+        <p>This script handles the actual setting up and reading of GPS and compass values. Other scripts (primarily Followcube) refer to this script. There are perhaps more than necessary precautions taken in the Start function to make sure the compass is enabled, but this is due to the extreme difficulty we had actually enabling the compass. For some reason the compass would enable and all possible checks would declare the compass was working but we would always get a heading of 0 degress. This setup got it working for slightly unfathomable reasons and so I never changed it.</p>
         <br>
-        -ServerScript
+        <h3>ServerScript</h3>
         <br>
-        -MultiTrackingScript
+        <h3>MultiTrackingScript</h3>
     </p>
-
-<p>
-    THINGS TO REMEMBER:
-    mud marker doesnt work!! - say which markers do!
-    say what unity directions correspond to which real directions
-</p>
 </div>
 
 </body>
