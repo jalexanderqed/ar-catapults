@@ -3,3 +3,8 @@
     margin: auto;
     font-family: 'Roboto', sans-serif;
 }
+
+img{
+	display: block;
+	margin: auto;
+}
