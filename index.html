@@ -99,15 +99,30 @@
     </p>
     <h3>GPS</h3>
     <p>
-
+        Although we implemented support for positioning the players using the tablets' GPS, this is not sufficiently
+        accurate indoors for the scales on which we currently play the game. The GPS accuracy varies from 10 to 20
+        meters. That said, if the players are sufficiently far apart (and preferably outdoors), the GPS should be
+        good enough to provide satisfactory results. More possible ways to improve it are detailed below.
     </p>
     <br>
 
+    <hr>
     <h2>Potential Improvements</h2>
+    <h3>Adjustable Marker Size</h3>
     <p>
-        -We didnt really use GPS
-        <br>
-        -We do not account for different marker sizes
+        Because they are the application's only source of physical context, the Vuforia markers determine the scale
+        of the virtual scene. Thus, if a user uses a larger or smaller marker, all the virtual objects and distances
+        will be scaled accordingly. We do not currently provide a means for the user to configure the size of their
+        markers, though this is certainly possible. To implement this, we simply need to dynamically rescale the
+        targets in Unity.
+    </p>
+
+    <h3>Better GPS</h3>
+    <p>
+        It may be possible to improve the positioning provided by the GPS. Since we assume that the game markers are
+        not moving, we could average the calculated position of each marker over time as we currently do with the
+        compass. While we have not tested this, if it is given some time to interpolate accurate values, it might be
+        be sufficient to replace users providing their offsets manually.
     </p>
 
     <hr>
@@ -137,12 +152,6 @@
         castles, and checking for winning is all calculated on the server and displayed on the clients. Conversely, the
         “Pillguys”, the tall, mohawked avatars of the players, are never actually seen by the server and calculated and
         moved entirely locally. This means the teapots, which are calculated by the server, will not collide with them.
-    </p>
-
-    <hr>
-    <h2>Working With Vuforia</h2>
-    <p>
-
     </p>
 
     <hr>
