@@ -20,13 +20,12 @@
 
     <h2>Overview</h2>
     <p>
-        For AR-Catapults, we wanted to create an AR experience where players share a virtual space that exactly
-        coincides with the real world. Each player has a Nexus tablet acting as a window into this augmented space, and
+        For AR-Catapults, we wanted to Create an AR experience through a shared, consistent virtual space coinciding with the real world for two or more people. Each player has a Nexus tablet acting as a window into this augmented space, and
         we display a virtual model of the tablet in the same location. If the players can see each other, the virtual
         tablet and a simple avatar should be overlaid directly onto the real-world position of the other playerother
         player. If the players cannot see each other, the avatar and virtual tablet are still displayed, and each player
         gains x-ray vision through any walls or obstacles. This is the basic environment around which we wanted to
-        design and implement a game .
+        design and implement a game.
     </p>
 
     <h3>Tablet Overlay Demonstration</h3>
@@ -44,7 +43,7 @@
         spawns behind each player and they begin attempting to topple the castle of the other player. Once enough blocks
         have fallen away from either castle, the game ends and a winner is declared.
     </p>
-    <h3>GamePlay Demonstration</h3>
+    <h3>Gameplay Demonstration</h3>
     <div style="text-align: center">
         <iframe id="demo2" width="560" height="315" src="https://www.youtube.com/embed/zD8_5FR4Mwk" frameborder="0"
                 allowfullscreen></iframe>
@@ -82,7 +81,7 @@
     <h3>Compass</h3>
     <p>
         As mentioned above, Vuforia only provides a relative position and rotation of the player. Our use case does not
-        assume any predetermined position or orientation for the marker(s) being tracked. Since the user specifies their
+        assume any predetermined position or orientation for the marker(s) being tracked. Instead, we wanted north to always correspond to the positive Z direction regardless of marker used or it's real orientation. Since the user specifies their
         offset, position is established at start time. However, we then have to determine the absolute orientation of
         player's tablet in order to correctly place objects around them in virtual space, including the other player.
         This is done with the aid of the compass. Once a marker has been found, we begin querying the tablet's compass
@@ -93,9 +92,8 @@
         we continuously average the results given by the rotation offset calculation, causing the offset to rapidly
         converge to the marker's actual rotation. The only disadvantage of this approach is that if the marker rotates
         while the game is being played, it will take some time for this to manifest in the player's view of the game
-        world. Thus, we assume that the position and orientation of the marker remains constant throughout gameplay.<br>
+        world. You can see this happen at 0:27 in the second video. Thus, we assume that the position and orientation of the marker remains constant throughout gameplay.<br>
 
-        <img id = "animgif" src = "./images/compass.gif">
     </p>
     <h3>GPS</h3>
     <p>
@@ -121,8 +119,7 @@
     <p>
         It may be possible to improve the positioning provided by the GPS. Since we assume that the game markers are
         not moving, we could average the calculated position of each marker over time as we currently do with the
-        compass. While we have not tested this, if it is given some time to interpolate accurate values, it might be
-        be sufficient to replace users providing their offsets manually.
+        compass. Another difficulty with this is that the tablets do not update their GPS information until a player has moved a significant distance and thus this would entail an inconvenient, possibly impracticable calibration step every every time a player connects. However, if this were possible, it might be sufficient to replace manually input offsets.
     </p>
 
     <hr>
@@ -142,7 +139,7 @@
         When one of the tablets is used a server host, when it begins the server it checks it’s GPS location and decides
         that that location is (0,0,0) in Unity. When one of our computers is used a server, they cannot figure out their
         in-world position. Instead, when the first tablet connects and tells the server it’s GPS position, the server
-        decides that that position is the origin and replies with an offset of (0,0).
+        decides that that position is the origin and replies with an offset of (0,0). Players may connect with a pre-decided offset, and this is input in the unlabeled text box in the upper left corner by typing in a string of the form "x,y". Leaving it empty results in GPS being used.
     </p>
     <p>
         Once the initial rotating and offsetting is done, we can easily use Unity’s default functionality for syncing
@@ -153,6 +150,7 @@
         “Pillguys”, the tall, mohawked avatars of the players, are never actually seen by the server and calculated and
         moved entirely locally. This means the teapots, which are calculated by the server, will not collide with them.
     </p>
+    <h3>Gameplay</h3>
 
     <hr>
     <h2>Code Structure</h2>
@@ -175,14 +173,8 @@
 
 <p>
     THINGS TO REMEMBER:
-    change the first scentence to fit with presentation
     mud marker doesnt work!! - say which markers do!
-    refer to video instead of have animated gif
-    game setup in design section!
-    that box in the upper left is is the deciding your virtual offset
     say what unity directions correspond to which real directions
-    who did what?
-    decided to use compass so we dont need a "always north" marker
 </p>
 </div>
 
