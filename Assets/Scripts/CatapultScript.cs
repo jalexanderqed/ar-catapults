@@ -36,13 +36,13 @@ public class CatapultScript : MonoBehaviour {
 		if (!amLocal) {
 			return;
 		}
-		netProjShow.GetComponent<Renderer> ().enabled = false;
+		//netProjShow.GetComponent<Renderer> ().enabled = false;
 	}
 
     // Update is called once per frame
     void Update() {
 		if (!amLocal) {
-			netProjShow.GetComponent<Renderer>().enabled = !(netProjShow.transform.position == ghostProjectile.transform.position);
+			//netProjShow.GetComponent<Renderer>().enabled = !(netProjShow.transform.position == ghostProjectile.transform.position);
 			return;
 		}
 		if (projectile && projectile.GetComponent<Rigidbody>().isKinematic) {
