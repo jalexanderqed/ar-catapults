@@ -31,7 +31,7 @@
     </p>
 
     <h3>Tablet Overlay Demonstration</h3>
-    <div style="text-align: center">
+    <div style="text-align: center;">
         <iframe id="demo1" width="560" height="315" src="https://www.youtube.com/embed/p0lWrdOnaV4" frameborder="0"
                 allowfullscreen volume="0"></iframe>
     </div>
@@ -46,7 +46,7 @@
         have fallen away from either castle, the game ends and a winner is declared.
     </p>
     <h3>Gameplay Demonstration</h3>
-    <div style="text-align: center">
+    <div style="text-align: center;">
         <iframe id="demo2" width="560" height="315" src="https://www.youtube.com/embed/zD8_5FR4Mwk" frameborder="0"
                 allowfullscreen></iframe>
     </div>
@@ -242,6 +242,14 @@
     <h3>ServerScript</h3>
     <br>
     <h3>MultiTrackingScript</h3>
+    <p>
+        MultiTrackingScript was originally an experimental script we wrote to try and improve tracking of multiple
+        targets by making a wrapper around objects in the scene a child of the currently best-tracked image target.
+        However, it appears that this is similar to what Vuforia does, though Vuforia will reset the position of the
+        scene if tracking is completely lost. We ended up just allowing Vuforia to take care of the scene position.
+        However, the method <code>GetBestTracked()</code> in this script is still used by GPSScript when repositioning the current
+        marker to match the results from the compass.
+    </p>
 </div>
 
 </body>
