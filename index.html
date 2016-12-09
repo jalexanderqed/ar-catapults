@@ -24,10 +24,9 @@
         with the real world for two or more people. Each player has a Nexus tablet acting as a window into this
         augmented space, and
         we display a virtual model of the tablet in the same location. If the players can see each other, the virtual
-        tablet and a simple avatar should be overlaid directly onto the real-world position of the other playerother
-        player. If the players cannot see each other, the avatar and virtual tablet are still displayed, and each player
-        gains x-ray vision through any walls or obstacles. This is the basic environment around which we wanted to
-        design and implement a game.
+        tablet and a simple avatar should be overlaid directly onto the real-world position of the other
+        player. If the players cannot see each other, the avatar and virtual tablet are still displayed, and as such each player
+        gains a kind of x-ray vision through any walls or obstacles. Essentially, each device knows and tracks where it is in the world and tells the others so they can all share the same space. This is the basic environment around which we wanted to design and implement a game.
     </p>
 
     <h3>Tablet Overlay Demonstration</h3>
@@ -42,7 +41,7 @@
         make the positive z direction align to magnetic north. Tracking information from Vuforia is used to handle the
         rest of syncing. There is a simple interface to connect via IP, and once they connect, each player is given a
         catapult (really more like a slingshot) for launching teapots at the other. When the game starts, a castle
-        spawns behind each player and they begin attempting to topple the castle of the other player. Once enough blocks
+        spawns behind each player and they begin attempting to topple each other's castle. Once enough blocks
         have fallen away from either castle, the game ends and a winner is declared.
     </p>
     <h3>Gameplay Demonstration</h3>
@@ -53,8 +52,8 @@
     <h3>Determining Positions</h3>
     <p>
         The system works by having the server position itself at (0,0,0) in the
-        virtual world. When players connect, they tell the server where they are in the world, and
-        the server calculates an offset in Unity units for the player to move to. Furthermore, when first seeing a
+        virtual world. When players connect, they tell the server where they are in the real world and
+        the server calculates an offset in Unity units to move the player virtually. Furthermore, when first seeing a
         Vuforia marker, the player's device determines the offset between the direction the marker is facing in the real
         world (using the compass)
         and where it is expected to be facing in the virtual world and rotates the virtual marker to account for the
@@ -96,7 +95,7 @@
         we continuously average the results given by the rotation offset calculation, causing the offset to rapidly
         converge to the marker's actual rotation. The only disadvantage of this approach is that if the marker rotates
         while the game is being played, it will take some time for this to manifest in the player's view of the game
-        world. You can see this happen at 0:27 in the second video. Thus, we assume that the position and orientation of
+        world. You can see this happen at 0:27 in the gameplay demonstration video. Thus, we assume that the position and orientation of
         the marker remains constant throughout gameplay.<br>
 
     </p>
@@ -236,6 +235,9 @@
         so I never changed it.
     </p>
     <h3>ServerScript</h3>
+    <p>
+        This script exists on an object that is only visible by the server. The <code>Offset</code> function handles calculating offsets from a provided GPS location. It actually simply returns the value in meters (in a way that is only accurate over small distances), and in order to be truly correct would need to instead return an offset in units of the length of a marker. Unfortunately we did not implement that for GPS as it is highly inaccurate over the distances we consider anyway and so we instead focused on player provided offsets. You can also find the <code>setLoc</code> function here. This is called when the server does not have it's own GPS and so accepts it's location as the GPS location of the first client that connects.
+    </p>
     <h3>MultiTrackingScript</h3>
     <p>
         MultiTrackingScript was originally an experimental script we wrote to try and improve tracking of multiple
