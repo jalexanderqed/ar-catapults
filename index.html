@@ -19,8 +19,13 @@
     </div>
 
     <h2>Overview</h2>
+    <h3>Environment</h3>
     <p>
-        For AR-Catapults, we wanted to Create an AR experience through a shared, consistent virtual space coinciding
+        We designed this project on Unity using Vuforia and running on two Google Nexus tablets. These are all systems we have experience in, we know work very well , and we knew we did not need to spend a significant amount of time setting up or learning. This allowed us to focus more on our project goals than working out how to use a system.
+    </p>
+    <h3>Main Idea</h3>
+    <p>
+        For AR-Catapults, we wanted to create an AR experience through a shared, consistent virtual space coinciding
         with the real world for two or more people. Each player has a Nexus tablet acting as a window into this
         augmented space, and
         we display a virtual model of the tablet in the same location. If the players can see each other, the virtual
@@ -56,11 +61,11 @@
         the server calculates an offset in Unity units to move the player virtually. Furthermore, when first seeing a
         Vuforia marker, the player's device determines the offset between the direction the marker is facing in the real
         world (using the compass)
-        and where it is expected to be facing in the virtual world and rotates the virtual marker to account for the
+        and where it is facing in the virtual world and rotates the virtual marker to account for the
         difference. All
         virtual movements and rotations are then affected by these offsets, and players can see each other correctly. An
         important note is that we did not have much of a way to accurately get the real-world position of a player. GPS
-        is not currently designed to work over the small distances (even as small as across a building) we designed for,
+        is not currently designed to work over the small distances (even as small as across a building) we developed for,
         so instead players may tell the server what offset they wish to be at when connecting.
     </p>
 
@@ -74,7 +79,7 @@
         player's virtual camera, through which they see virtual objects, at the same position it holds in the physical
         world. This is extremely helpful and matches our game design fairly well, but it prevents us from offsetting the
         players from each other. Using the default position, each player will appear near the origin (the location of
-        the markers in Unity space. To solve this, when a player joins the server, we construct a new camera that
+        the markers in Unity space). To solve this, when a player joins the server, we construct a new camera that
         follows the movement and rotation of Vuforia's default camera but is offset by the user-specified distance
         mentioned above. This camera is the one displayed on the tablet, giving the player the impression that they are
         offset from the origin.
@@ -88,9 +93,8 @@
         offset, position is established at start time. However, we then have to determine the absolute orientation of
         player's tablet in order to correctly place objects around them in virtual space, including the other player.
         This is done with the aid of the compass. Once a marker has been found, we begin querying the tablet's compass
-        and rotate the game object representing the marker to match its real physical orientation. Because the scene is
-        based off of the marker's position and rotation, rotating the marker rotates the whole scene to correspond
-        correctly to the player's real-world orientation. However, the readings from the device's compass can be
+        and rotate the game object representing the marker to match its real-world orientation. Because the scene is
+        based off of the marker's position and rotation, rotating the marker rotates the whole scene  correspondingly. However, the readings from the device's compass can be
         inconsistent, and updating the marker continuously creates a great deal of jitter in the scene. To avoid this,
         we continuously average the results given by the rotation offset calculation, causing the offset to rapidly
         converge to the marker's actual rotation. The only disadvantage of this approach is that if the marker rotates
@@ -101,10 +105,8 @@
     </p>
     <h3>GPS</h3>
     <p>
-        Although we implemented support for positioning the players using the tablets' GPS, this is not sufficiently
-        accurate indoors for the scales on which we currently play the game. The GPS accuracy varies from 10 to 20
-        meters. That said, if the players are sufficiently far apart (and preferably outdoors), the GPS should be
-        good enough to provide satisfactory results. More possible ways to improve it are detailed below.
+        Although we implemented support for positioning the players using the tablets' GPS, it is not sufficiently
+        accurate indoors for the scale the game for. While the minimum achievable GPS resolution is currently 5 meters, in testing we never really got the accuracy below 10 meters (and most of the time is was about 20 meters). That said, if the players are sufficiently far apart (and preferably outdoors), the GPS should be good enough to provide satisfactory results. More possible ways to improve it are detailed below.
     </p>
     <br>
 
@@ -123,7 +125,7 @@
     <p>
         It may be possible to improve the positioning provided by the GPS. Since we assume that the game markers are
         not moving, we could average the calculated position of each marker over time as we currently do with the
-        compass. Another difficulty with this is that the tablets do not update their GPS information until a player has
+        compass. An important difficulty with this is that the tablets do not update their GPS information until a player has
         moved a significant distance and thus this would entail an inconvenient, possibly impracticable calibration step
         every every time a player connects. However, if this were possible, it might be sufficient to replace manually
         input offsets.
@@ -135,14 +137,14 @@
     <p>
         We built our game in Unity, and accomplished communication between devices over Unity’s built-in Unet system.
         Unet uses a host-clients model, but any device can be a
-        host or client. When setting up a game, one player starts a server on their device and the other connects to it.
-        Unfortunately we had difficulty getting out tablets to accept messages from the other, and so instead during
+        host or a client. When setting up a game, one player starts a server on their device and the other connects to it.
+        Unfortunately we had difficulty getting out tablets to accept messages from each other, so instead during
         testing and the demonstration we set up one of our computers as the server (although not participating as a
         player) and had both tablets join as clients.
     </p>
     <p>
-        When one of the tablets is used a server host, when it begins the server it checks it’s GPS location and decides
-        that that location is (0,0,0) in Unity. When one of our computers is used a server, they cannot figure out their
+        When one of the tablets is used as the server, when it begins it checks it’s GPS location and decides
+        that that location is (0,0,0) in Unity. However, when one of our computers runs the server, they cannot figure out their
         in-world position. Instead, when the first tablet connects and tells the server it’s GPS position, the server
         decides that that position is the origin and replies with an offset of (0,0).
     </p>
@@ -151,40 +153,42 @@
         object transforms to keep them correct. Each player independently tracks and updates their own position and Unet
         does the work of making the same changes on the other player’s screen. We also sync the positions of the the
         catapult components for each player and the positions of all the castle blocks. The flying teapots, crumbling
-        castles, and checking for winning is all calculated on the server and displayed on the clients. To best utilize
+        castles, and checking for winning are all calculated on the server and displayed on the clients. To best utilize
         the networking, we made sure tablet positions were synced as often as possible so they move fluidly but
-        dramatically decreased the rate at which blocks of each castle are synced as there are many of them.
+        dramatically decreased the rate at which blocks of the castles are synced or the server would lag at times.
     </p>
     <h3>Gameplay</h3>
 
     <p>
         We decided to utilize our system by designing a game where each player is given a catapult (really a slignshot)
         and tasked with toppling the castle of the other player. This seemed like a fun game and would require a large
-        amount of movement in the real world to pull back and launch the projectiles. The actual markers we support are
-        the pebbles and wood chips markers. These are expected to be placed on a wall in portrait orientation. There is
-        a right way up as well, although it the marker is upside down the main effect will be that the virtual world is
-        also displayed upside down, so the player can easily realize they need to flip around the marker.
+        amount of movement in the real world to pull back and launch the projectiles. In the final implementation, players can grab their launchable teapot by tapping on it or approaching very close, pull it back by actually moving, and then tapping the screen to send it flying. 
     </p>
 
     <img src = "./images/crumble.png">
 
     <p>
+        The actual markers we support are two of Vuforias common defaults,
+        the pebbles and wood chips markers. These are expected to be placed on a wall in portrait orientation. There is
+        a right way up as well, although if the marker is upside down the main effect will be that the virtual world is
+        also displayed upside down, so the player can easily realize they need to flip it around.
+    </p>
+
+    <p>
         To correctly set up a game, the host should either choose the large top button to be both a host and a client or
-        the "LAn Server Only" button to only be a host. While John has a fair amount of experience in Unity, neither of
+        the "LAN Server Only" button to only be a host. While John has a fair amount of experience in Unity, neither of
         us had ever actually programmed GUI’s in it
         before, so the menus are not very pretty or helpful. We also used Unity's default networking GUI, although we
         had to scale it up as it originally appeared tiny on our tablet screens. The other player must connect to the
         server via the IP address field. As it exists currently, the project only accepts exactly two players. Players
-        may connect with a pre-decided offset, and this is input in the unlabeled text box in the upper left corner by
-        typing in a string of the form "x,y". Leaving it empty results in GPS being used.
+        may connect with a pre-decided offset, and this is input by typing the unlabeled text box in the upper left corner before starting to host or connecting as a client. Input must be a string of the form "x,y" (minus the quotes). Leaving it empty (or giving an incorrectly formatted input) results in GPS being used.
     </p>
 
     <img src = "./images/menu.png">
 
     <p>
         Once both players are in, if either player presses the "Start Game" button, castles spawn and the game is on.
-        Players much pull back their teapots in order to fire them. The game continues until one of the castles topples
-        sufficiently.
+        While the main objective is to topple your opponent's castle as quickly as possible, it is actually possible to defend yourself to an extent. Your in-game avatar is able to stand in between a fired teapot and your castle, and you can even collide teapots in mid-air. Regardless, once enough blocks from one of the castles has fallen off of the platform and into the infinity below the game is over.
     </p>
 
     <img src = "./images/win.png">
@@ -192,21 +196,20 @@
     <hr>
     <h2>Code Structure</h2>
     <p>
-        The following is essentially a set of Readme's for looking at important parts of the code. All of the scripts
-        are found in the Assest/Scripts folder.
+        The following is essentially a set of README's for looking at important parts of the code. There are many more scripts in reality but these are the important ones for AR functionality. All of the scripts are found in the Assest/Scripts folder.
     </p>
-    <h3>Followcube:</h3>
+    <h3>FollowCube:</h3>
     <p>
         This is the main script for the player object and controls the position and rotation of player in the world. A
         significant portion of the code in this script is setting up the game aspect and the methods to interface with
         Vuforia (spawning GUI objects, setting up game components, finding vuforia's unity camera, moving it's rendering
-        of the camera feed into our new camera, etc.), but this also includes a lot of the important code for the actual
+        of the camera feed into our new camera, etc.), but it also includes a lot of the important code for the actual
         AR systems.
     </p>
     <p>
         In the <code>Update</code> function you can find the code for reading GPS (or a given offset) and communicating with the
         server to determine the resulting virtual offset. Players first wait for their location services start, and then
-        once they do tell the server where they are in the world (or where they want to be in the virtual world).
+        once they do they tell the server where they are in the world (or where they want to be in the virtual world).
         Another possible result of this first question is that the server will decide that that is it's own location if
         it does not have access to location services itself. The server then either sends them back an offset in virtual
         space they should place themselves (see the <code>OnGetOffset</code> function) or a flag offset meaning the server's location
@@ -215,12 +218,12 @@
     </p>
     <p>
         The <code>LateUpdate</code> function handles moving the camera the player actually sees through and the use of the compass.
-        The first part simply sets the local position (within this object that is at the correct offset) of the used
+        The first part simply sets the local position (within an object that is at the correct offset) of the used
         camera to the global position of Vuforia's camera. The last part handles using the compass. We determine the
         difference between the direction a player is facing in-game and where the compass is facing and rotate the
         virtual version of the marker to compensate. This in turn changes where the Vuforia camera is in-game and
         therefore the local positon/rotation of our camera. We chose to rotate the marker instead of the camera directly
-        because problems rendering the camera feed correctly arose when we tried that. We also cannot use the compass
+        because problems rendering the camera feed correctly arose when we tried it differently. We also cannot use the compass
         information so simply as it jitters far too much. Instead, we only rotate part of the way, with this amount
         decreasing every time we do so. Above we have called this a continuous average, although more accurately it's
         really a continuous decreasing spherical interpolation.
@@ -228,15 +231,15 @@
     <h3>GPSScript</h3>
     <p>
         This script handles the actual setting up and reading of GPS and compass values. Other scripts (primarily
-        Followcube) refer to this script. There are perhaps more than necessary precautions taken in the Start function
+        FollowCube and ServerScript) refer to this script. There are perhaps more than necessary precautions taken in the <code>Start</code> function
         to make sure the compass is enabled, but this is due to the extreme difficulty we had actually enabling the
         compass. For some reason, the compass would enable and all possible checks would declare the compass was working
         but we would always get a heading of 0 degress. This setup got it working for slightly unfathomable reasons and
-        so I never changed it.
+        so we never changed it.
     </p>
     <h3>ServerScript</h3>
     <p>
-        This script exists on an object that is only visible by the server. The <code>Offset</code> function handles calculating offsets from a provided GPS location. It actually simply returns the value in meters (in a way that is only accurate over small distances), and in order to be truly correct would need to instead return an offset in units of the length of a marker. Unfortunately we did not implement that for GPS as it is highly inaccurate over the distances we consider anyway and so we instead focused on player provided offsets. You can also find the <code>setLoc</code> function here. This is called when the server does not have it's own GPS and so accepts it's location as the GPS location of the first client that connects.
+        This script exists on an object that is only visible by the server. The <code>Offset</code> function handles calculating offsets from a provided GPS location. It actually simply returns the value in meters (in a way that is only accurate over small distances), and in order to be truly correct would need to instead return an offset in units of the length of a virtual marker. Unfortunately we did not implement that for GPS as it is highly inaccurate over the distances we consider anyway and so we instead focused on player provided offsets. You can also find the <code>setLoc</code> function here. This is called when the server does not have it's own GPS and so accepts it's location as the GPS location of the first client that connects.
     </p>
     <h3>MultiTrackingScript</h3>
     <p>
@@ -244,8 +247,13 @@
         targets by making a wrapper around objects in the scene a child of the currently best-tracked image target.
         However, it appears that this is similar to what Vuforia does, though Vuforia will reset the position of the
         scene if tracking is completely lost. We ended up just allowing Vuforia to take care of the scene position.
-        However, the method <code>GetBestTracked()</code> in this script is still used by GPSScript when repositioning the current
+        However, the method <code>GetBestTracked()</code> in this script is still used by FollowCube when repositioning the current
         marker to match the results from the compass.
+    </p>
+    <h2>Credits</h2>
+    <p>
+        <a href = "https://unity3d.com/learn/tutorials/topics/multiplayer-networking/setting-player-prefab?playlist=29690">Unet Tutorial and inspiration for the player avatar</a><br>
+        <a href = "https://www.vuforia.com/">Vuforia</a>
     </p>
 </div>
 
